@@ -1,0 +1,98 @@
+---
+title: "**Preregistration Protocol:** `r params$answers[[2]]`"
+params:
+  authors: NA
+  orcid: NA
+  answers: NA
+  questions: NA
+  metadata: NA
+---
+````{r, include = FALSE}
+Sys.setlocale("LC_TIME", "English") # we want the date to be displayed in English
+```` 
+
+---
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+---
+  
+````{r, echo = FALSE, results = 'asis'}
+cat("## Author/s:", "\n\n")
+for (i in 1:length(params$authors)){
+  cat(params$authors[[i]], ", ORCID ID: ", params$orcid[[i]], "\n\n", sep ="")
+}
+````
+
+````{r, echo = FALSE, results = 'asis'}
+
+cat("## About: ","\n\n")
+last_i <- 3  # use to start next loop 
+for (i in 3:length(params$answers)) { # 1 = Titlepage, 2 = Title, 3 = item to be printed
+  if(grepl("hxxd_", params$questions[[i]])){
+    last_i <- i  # save last iteration value
+    break}
+  cat("\n\n", sep ="")
+  cat(" __", params$questions[[i]],":", "__ ", params$answers[[i]], sep ="")
+}
+cat("This preregistration is based on the PRP-QUANT Template (version 3).", "\n\n", sep ="")
+
+````
+
+\newpage
+
+````{r, echo = FALSE, results = 'asis'}
+
+for (i in (last_i):length(params$answers)) # titelseite wird separat formatiert, danach loop durch alle items
+{
+  if(grepl("hxxd_", params$questions[[i]])) # find the headings (marked wit "hxxd_")
+  {
+    cat("\\newpage", sub("hxxd_", "# ", params$questions[[i]]), "\n\n") #start new page before each heading
+  }
+  
+  else if (is.list(params$answers[[i]]))  # matrix item - ACHTUNG! Passt nur auf dieses eine Matrix Item 
+  {
+    for (a in names(params$answers[[i]])) 
+      {
+        if (is.null(params$answers[[i]][[a]]))
+        {
+          cat(a)
+          cat(": no response", "\n\n")
+        }
+        else
+        {
+          if (params$answers[[i]][[a]] == "none") 
+            {
+            cat("The ", a, " will not be made accessible.", "\n\n", sep ="")
+            }
+          else if (params$answers[[i]][[a]] == "not applicable")
+            {
+            cat("The study will not involve ", a, ".\n\n", sep ="") 
+            }
+          else 
+            {
+            cat(a, " will be shared ", params$answers[[i]][[a]], ".\n\n", sep ="")
+            }
+        }
+    }
+  }
+  else if (is.logical(params$answers[[i]])) # TRUE/FALSE items
+  {
+   # cat("**Item:** ", params$questions[[i]], "\n\n")
+    cat("##", params$questions[[i]], "\n\n")
+    if (params$answers[[i]] == TRUE)
+    {
+      cat(params$answers[[i]],  "\n\n")
+    }
+    else
+    {
+      cat("**Answer:** ", "No",  "\n\n")
+    }
+  }
+  else
+  {
+    cat("##", params$questions[[i]], "\n\n") # Text items
+    cat(params$answers[[i]],  "\n\n")
+  }
+}
+
+````
+

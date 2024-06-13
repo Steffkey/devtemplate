@@ -1,0 +1,13 @@
+name: Deviation-Template
+title: Deviation-Template
+username: stef
+account: stef
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 12163443
+bundleId: 8727390
+url: https://stef.shinyapps.io/Deviation-Template/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: templatedate_in_functions.R

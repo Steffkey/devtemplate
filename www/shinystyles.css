@@ -1,0 +1,95 @@
+/* */
+/* styling of the HEADER section */
+
+.logobar { /* white bar that contains the ZPID logo */
+	padding: 0em;
+	margin: 0;
+	text-align: left;
+}
+
+.logo{ /* svg file with logo, more attributes (e.g. size) are set in UI of App.R */
+	padding-top: 5em;
+	padding-bottom: 0.5em;
+	max-width: 100%;
+}
+
+.sidecolumn { /* darkblue column on the left */
+	height: 6em; 
+	background-color: rgb(26,17,70);
+}
+
+.headerbar { /* colored bar with product name (PreReg) */
+	display: flex;
+	justify-content: left; 
+	align-items: center;
+	background-color: rgb(131, 23, 118);
+	color: white;
+	margin: 0;
+	height: 4em;
+}
+.headerbar > p { /* text paragraph in header bar */
+	font-size: 2rem;
+	text-align: left;
+	padding: 1em 0em 1em 2em;
+	margin: 0;
+}
+
+.whitebar { /* white bar under the header bar */
+	height:2em; 
+	width: auto;
+}
+
+/* */
+/* styling of the CONDITIONAL PANEL that holds the template items (mainly used for debugging) */
+.conditional-panel {
+	/*border: 2px solid red;
+	/*margin-bottom: 10px; /* use for debugging style issues */
+}
+
+.conditional-panel .column {
+	box-sizing: border-box; /* set so that margins and paddings do not increase box size */
+	padding: 2em;
+	padding-left: 3em; 
+}
+
+.conditional-panel .column .flex-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+	/*border: 2px solid black; */
+	/* background-color: rgb(248,248,248); */ 
+	max-width: 30em;
+	padding-top: 1em;
+	border-radius: 0.2em;
+}
+
+/* */
+/* style EXPORT button in container */
+.flex-container .download-btn {
+	margin-left: 2em; 
+}
+
+/* */
+/* styling of the INFO ICONS */
+.icon-paragraph { /* Style container that holds icon */
+	display: flex;
+  /*align-items: bottom;*/
+}
+
+.icon-paragraph i {
+	margin-right: 0.5em; /* distance between icon and item title */
+}
+
+.info_icon {
+	color: #337ab7; /* color of the icons */
+}
+
+/* */
+/* styling of the TOOLTIPS */
+.tooltip-inner {
+	  background-color: #337ab7; /* background color of the tooltips */
+	  color: white; /* text color of the tooltips */
+}
+
+
