@@ -1,3 +1,16 @@
+//display helptext
+$(document).on('shiny:bound', function(event) {
+  console.log('Shiny bound: initializing tooltips');
+  $('.question_icon').tooltip({
+	placement: 'top',
+	trigger: 'hover',
+	delay: { 'show': 0, 'hide': 3000 },
+	title: function() {
+	  return $(this).attr('data-tooltip');
+	}
+  });
+});
+
 //display tooltips
 $(document).on('shiny:bound', function(event) {
   console.log('Shiny bound: initializing tooltips');

@@ -52,21 +52,21 @@
 	padding-left: 3em; 
 }
 
-.conditional-panel .column .flex-container {
+.export-import-container{
 	display: flex;
 	flex-direction: row;
 	justify-content: start;
 	align-items: center;
-	/*border: 2px solid black; */
+	/*border: 2px solid green;*/
 	/* background-color: rgb(248,248,248); */ 
 	max-width: 30em;
-	padding-top: 1em;
-	border-radius: 0.2em;
+	padding-top: 0;
+	margin-top:0;
 }
 
 /* */
 /* style EXPORT button in container */
-.flex-container .download-btn {
+.export-import-container .download-btn {
 	margin-left: 2em; 
 }
 
@@ -74,6 +74,7 @@
 /* styling of the INFO ICONS */
 .icon-paragraph { /* Style container that holds icon */
 	display: flex;
+	align-items: top;
   /*align-items: bottom;*/
 }
 
@@ -81,7 +82,7 @@
 	margin-right: 0.5em; /* distance between icon and item title */
 }
 
-.info_icon {
+.info_icon, .question_icon {
 	color: #337ab7; /* color of the icons */
 }
 

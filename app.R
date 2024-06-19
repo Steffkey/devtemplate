@@ -13,9 +13,10 @@ library(rsconnect)
 #### PREPARATIONS '#############################################################
 
 rm(list = ls()) # clear environment
-load("dev_d1.RData") # Load the processed data
-path = "deviation_template_1.xlsx" # set path to template excel
-source("functionlibrary.R", local = TRUE) # get functions
+#load("dev_d2.RData") # Load the processed data
+load("temp_dev5.RData") # Load the processed data
+path = "deviation_template_2.xlsx" # set path to template excel
+source("C:/Users/mueller_admin.ZPIDNB21/Documents/Desktop/Rprojects/scripts/functionlibrary.R", local = TRUE) # get functions
 
 #### UI ########################################################################
 
@@ -69,12 +70,12 @@ ui <- fluidPage(
              br(),
              p("Please note that deviations from preregistered plans are quite normal. For example, they may occur due to discovered mistakes, newly acquired knowledge, or unforeseen circumstances. In such cases, deviating from the preregistration can help improve the quality of the study. However, it is crucial to report all deviations transparently so that the study results can be accurately interpreted."),
              p("Please use the listed items to disclose and justify all deviations transparently."),
-             p("Step 1: Complete the template in this App."),
-             p("Step 2: Export your study protocol as PDF."),
-             p("Step 3: Submit your PDF to PsychArchives (https://pasa.psycharchives.org/). Select the collection \"other\" and link it to your preregistration."),
+             p("Step 1: Complete the deviation protocol in this App."),
+             p("Step 2: Export your deviation protocol as PDF."),
+             p("Step 3: Submit your PDF to PsychArchives", a(href = "https://pasa.psycharchives.org/", "https://pasa.psycharchives.org/"), ". Select the collection \"other\" and link it to your preregistration."),
              br(),
              p(strong("IMPORTANT:"), "Save your progress once in a while by clicking the ", strong("download button"), "that you will see on the left."),
-             p("In addition to the file format you selected, a ", strong(".rds file"), " will be downloaded. This is the most important file because it can be uploaded again later."),
+             p("In addition to the file format you selected, a ", strong(".rds file"), " will be downloaded. This is the most important file because it can be uploaded again later in the app to resume working on your deviation protocol."),
              br(),
              p("To begin, select “Template” in the drop-down menu on the upper left."),
              br()
@@ -91,21 +92,36 @@ ui <- fluidPage(
         condition = "input.selecttemplate == 'dev'",
           fluidRow(
             #  class = "row",
-            column(width = 3, class = "column",
-                   materialSwitch("descript", label = "Show descriptions", value = TRUE, status = "primary", right = FALSE),
-                   #tags$p(actionLink("browse", "Browse examples")),
-                   #tags$br(),
+            column(width = 3, class = "column", 
+                   materialSwitch(inputId = "descript", label = "Show descriptions", value = TRUE, status = "primary", right = FALSE),
+                   #tags$p(actionLink(inputId = "browse", label = "Browse examples")), #if you'd like to include examples, also change the link in the code somewhere below
+
+                   br(), 
+
+                   div(
+                     class = "icon-paragraph",
+                     tags$i(id = "export_icon", class = "fa-solid fa-circle-question question_icon", style = "cursor: pointer;", 
+                            `data-tooltip` = "Select PDF for your final report, XML for a machine-readable metadata description, and Word if you want to edit your file offline."),
+                     strong("Export your inputs:")
+                   ), 
                    
-                   div(class = "flex-container",
-                       radioButtons('format', 'Export as:', c('PDF', 'XML', 'Word'), inline = TRUE),
+                   div(class = "export-import-container", 
+                       radioButtons(inputId = 'format', label = '', choices = c('PDF', 'XML', 'Word'), selected = "PDF", inline = TRUE),
                        downloadButton("report", label = "", class = "download-btn", onclick = "document.getElementById('state').click()"),
                        downloadButton("state", label = "",  style = "opacity: 0; position: fixed; pointer-events:none;")
                    ),
                    
-                   br(),
+                   br(), br(),
                    
-                   div(class = "flex-container",
-                       fileInput("uploadFile", "Upload Previous State")
+                   div(
+                     class = "icon-paragraph",
+                     tags$i(id = "upload_icon", class = "fa-solid fa-circle-question question_icon", style = "cursor: pointer;", 
+                            `data-tooltip` = "Each time you export your inputs, an .rds file will also be exported. Upload this .rds file here to continue working on your protocol."),
+                     strong("Import Previous State (.rds file):")
+                   ), 
+                   
+                   div(class = "export-import-container",
+                       fileInput("uploadFile", "")
                    )
             ),
             
@@ -130,6 +146,9 @@ server <- function(input, output, session) {
   #   session$sendCustomMessage("openNewWindow", list(url = "https://www.psycharchives.org/en/browse/?fq=dcType_keyword%3A%28%22preregistration%22%29+AND+dcRights_keyword%3A%28%22openAccess%22%29&q=dc.type%3Apreregistration+AND+zpid.tags.visible%3APRP-QUANT+AND+dc.rights%3A+openAccess"))
   # })
   # ##### END browse link 
+  observeEvent(input$browse, {
+    session$sendCustomMessage("openNewWindow", list(url = "https://www.psycharchives.org/en/browse/?fq=dcType_keyword%3A%28%22preregistration%22%29+AND+dcRights_keyword%3A%28%22openAccess%22%29&q=dc.type%3Apreregistration+AND+zpid.tags.visible%3APRP-QUANT+AND+dc.rights%3A+openAccess"))
+  })
   
   #### add/remove contributors ###########################    
   # Track the number of input boxes to render
@@ -161,7 +180,7 @@ server <- function(input, output, session) {
   
   # Render the initial mainPanel
   output$dev_panel <- renderUI({
-    generate_dev_panel(dev_sheets, dev_items)
+    generate_dev_panel(temp_sheets, temp_items)
   })
   
   # Function to handle uploaded file
@@ -207,7 +226,7 @@ server <- function(input, output, session) {
       
       # Update the mainPanel with new data
       output$dev_panel <- renderUI({
-        generate_dev_panel(dev_sheets, modified_items)
+        generate_dev_panel(temp_sheets, modified_items)
       })
       
     }
@@ -265,12 +284,12 @@ server <- function(input, output, session) {
   # Observe the selected tab in the navlistPanel and update current_tab accordingly
   observeEvent(input$dev_panel, { # observe which tab is active
     #  print(input$dev_panel) # for debugging
-    current_tab(match(input$dev_panel, dev_sheets)) # find out the index of the current tab
+    current_tab(match(input$dev_panel, temp_sheets)) # find out the index of the current tab
     #  print(current_tab()) # for debugging
   })
   
   # Set up observer for next button using lapply
-  lapply(1:length(dev_sheets), function(i) {
+  lapply(1:length(temp_sheets), function(i) {
     observeEvent(input[[paste0("next", i)]], {
       current_tab(current_tab() + 1) # increase index if button is clicked
       #  print(current_tab()) # for debugging
@@ -278,7 +297,7 @@ server <- function(input, output, session) {
   })
   
   # Set up observer for previous button using lapply
-  lapply(1:length(dev_sheets), function(i) {
+  lapply(1:length(temp_sheets), function(i) {
     observeEvent(input[[paste0("previous", i)]], {
       current_tab(current_tab() - 1) # decrease index if button is clicked
       #  print(current_tab()) # for debugging
@@ -287,12 +306,19 @@ server <- function(input, output, session) {
   
   # Update the selected tab based on the current_tab value
   observe({
-    updateTabsetPanel(session, "dev_panel", selected = dev_sheets[current_tab()]) # generalize for all templates and sheets
+    updateTabsetPanel(session, "dev_panel", selected = temp_sheets[current_tab()]) # generalize for all templates and sheets
     session$sendCustomMessage(type = "scrollTop", message = list())
   })
   
   ##################### END navigate to next tabPanel 
   #### print report and save params ###########################
+
+  # observeEvent(input$report, { 
+  #    params <- generate_params(input, counter())
+  #    saveRDS(params,  file = "prevstate.rds")
+  # })
+  
+  
   output$report <- downloadHandler(
     filename = function() {
       paste('report', sep = '', switch(
@@ -303,8 +329,16 @@ server <- function(input, output, session) {
       # Ensure counter is passed to generate_params
       params <- generate_params(input, counter()) # Pass counter() to the function
       
+      # Select appropriate params based on format
+      selected_params <- switch(
+        input$format,
+        XML = params$params_s,  # Assuming XML uses the short version
+        PDF = params$params_s,
+        Word = params$params_long
+      )
+      
       if (input$format == 'XML') {
-        xmldoc <- generate_xml(params)
+        xmldoc <- generate_xml(selected_params)
         # Save the XML content to the file
         xml2::write_xml(xmldoc, file)
       } else {
@@ -329,7 +363,7 @@ server <- function(input, output, session) {
                                    HTML = html_document(), 
                                    Word = word_document()
                                  ),
-                                 params = params,
+                                 params = selected_params,
                                  envir = new.env(parent = globalenv())
         )    
         file.rename(out, file)
@@ -344,7 +378,7 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       params <- generate_params(input, counter())
-      saveRDS(params, file = file)
+      saveRDS(params$params_s, file = file)
     }
   )
   ##################### END print report and save params 
