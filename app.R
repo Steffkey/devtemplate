@@ -332,7 +332,7 @@ server <- function(input, output, session) {
       # Select appropriate params based on format
       selected_params <- switch(
         input$format,
-        XML = params$params_s,  # Assuming XML uses the short version
+        XML = params$params_s,  
         PDF = params$params_s,
         Word = params$params_long
       )

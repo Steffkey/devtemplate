@@ -37,57 +37,22 @@ cat("This deviation protocol is based on the deviation template (version 1).", "
 \newpage
 
 ````{r, echo = FALSE, results = 'asis'}
-
+# NOTE: I deleted the code for the other item types, but you can still find it in the report.RMD files of the PRP QUANT app
+# print the other sections
 for (i in 5:length(params$answers)) # titelseite wird separat formatiert, danach loop durch alle items
 {
   if(grepl("hxxd_", params$questions[[i]])) # find the headings (marked with "hxxd_")
   {
-    cat(sub("hxxd_", "# ", params$questions[[i]]), "\n\n") #start new page before each heading
+    cat(sub("hxxd_", "# ", params$questions[[i]]), "\n\n") #make it a heading
     if(grepl("hxxd_", params$questions[[i+1]])) # if the next item is also a heading, the previous section was empty
-      # !grepl("Other deviations", p$answers$D1))
-      {
-        cat("The authors declare that there were no ", sub("hxxd_", "", params$questions[[i]]), ".", "\n\n", sep ="") 
-      }
-
+    { #print that there were no deviations reported in that section
+      cat("The authors declare that there were no ", sub("hxxd_", "", params$questions[[i]]), ".", "\n\n", sep ="") 
+    }
+    else if(!any(grepl("Uncategorized/Other", p$answers$D1))) # we need a workaround for the last section
+    { #print that there were no deviations reported in the last section
+      cat("The authors declare that there were no Uncategorized/Other deviations.", "\n\n", sep ="")
+    }
   }
-  # else if (is.list(params$answers[[i]]))  # matrix item - ACHTUNG! Passt nur auf dieses eine Matrix Item 
-  # {
-  #   for (a in names(params$answers[[i]])) 
-  #     {
-  #       if (is.null(params$answers[[i]][[a]]))
-  #       {
-  #         cat(a)
-  #         cat(": no response", "\n\n")
-  #       }
-  #       else
-  #       {
-  #         if (params$answers[[i]][[a]] == "none") 
-  #           {
-  #           cat("The ", a, " will not be made accessible.", "\n\n", sep ="")
-  #           }
-  #         else if (params$answers[[i]][[a]] == "not applicable")
-  #           {
-  #           cat("The study will not involve ", a, ".\n\n", sep ="") 
-  #           }
-  #         else 
-  #           {
-  #           cat(a, " will be shared ", params$answers[[i]][[a]], ".\n\n", sep ="")
-  #           }
-  #       }
-  #   }
-  # }
-  # else if (is.logical(params$answers[[i]])) 
-  # {
-  #   cat("##", params$questions[[i]], "\n\n")
-  #   if (params$answers[[i]] == TRUE)
-  #   {
-  #     cat(params$answers[[i]],  "\n\n")
-  #   }
-  #   else
-  #   {
-  #     cat("**Answer:** ", "No",  "\n\n")
-  #   }
-  # }
   else
   {
     cat("#", params$questions[[i]], "\n\n") # Text items
@@ -95,7 +60,7 @@ for (i in 5:length(params$answers)) # titelseite wird separat formatiert, danach
   }
 }
 
-# licence text (hard-coded)
+# license text (hard-coded)
 cat("This deviation checklist was created by Lisa Spitzer and Stefanie Mueller based on the structure proposed by van 't Veer et al. (2019). It is available at https://www.psycharchives.org/ and shared under the CC BY 4.0 license.", "\n\n", sep ="")
 
 cat("The implementation as Shiny app was done by ZPID. Find out more about ZPID and our preregistration service PreReg by visiting http://prereg-psych.org/. To link your deviation protocol to your preregistration, submit it as a PDF to PsychArchives via https://pasa.psycharchives.org/.", "\n\n", sep ="")
