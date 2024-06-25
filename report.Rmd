@@ -30,7 +30,7 @@ cat("## About: ","\n\n")
 cat(" __", params$questions[[2]],":", "__ ", params$answers[[2]], "\n\n", sep ="")
 # version text after the last item on titlepage (hard-coded)
 cat(" __", params$questions[[4]],":", "__ ", sep ="") # print bold (e.g., __Template version:__)
-cat("This deviation protocol is based on the deviation template (version 1).", "\n\n", sep ="")
+cat("This deviation protocol is based on the PRP-DEV deviation template (version 1).", "\n\n", sep ="")
 
 ````
 
@@ -48,7 +48,7 @@ for (i in 5:length(params$answers)) # titelseite wird separat formatiert, danach
     { #print that there were no deviations reported in that section
       cat("The authors declare that there were no ", sub("hxxd_", "", params$questions[[i]]), ".", "\n\n", sep ="") 
     }
-    else if(!any(grepl("Uncategorized/Other", p$answers$D1))) # we need a workaround for the last section
+    else if(!any(grepl("Uncategorized/Other", params$answers$D1))) # we need a workaround for the last section
     { #print that there were no deviations reported in the last section
       cat("The authors declare that there were no Uncategorized/Other deviations.", "\n\n", sep ="")
     }

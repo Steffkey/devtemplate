@@ -10,13 +10,13 @@ library(shinyWidgets)
 library(tinytex)
 library(rsconnect)
 
-#### PREPARATIONS '#############################################################
+#### PREPARATIONS #############################################################
 
 rm(list = ls()) # clear environment
-#load("dev_d2.RData") # Load the processed data
-load("temp_dev5.RData") # Load the processed data
-path = "deviation_template_2.xlsx" # set path to template excel
-source("C:/Users/mueller_admin.ZPIDNB21/Documents/Desktop/Rprojects/scripts/functionlibrary.R", local = TRUE) # get functions
+load("temp_dev8.RData") # Load the processed data
+path = "deviation_template_3.xlsx" # set path to template excel
+source("functionlibrary.R", local = TRUE) # get functions
+#source("C:/Users/mueller_admin.ZPIDNB21/Documents/Desktop/Rprojects/scripts/functionlibrary.R", local = TRUE)
 
 #### UI ########################################################################
 
@@ -26,7 +26,6 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "shinystyles.css"), # contains styling, e.g. for header
     tags$script(type="text/javascript", src = "shiny_js_functions.js")
-    #tags$link(rel = "stylesheet", type = "text/css", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"),
   ),
   #### END link external scripts (css for styling, js for functionalities)
   
@@ -77,7 +76,7 @@ ui <- fluidPage(
              p(strong("IMPORTANT:"), "Save your progress once in a while by clicking the ", strong("download button"), "that you will see on the left."),
              p("In addition to the file format you selected, a ", strong(".rds file"), " will be downloaded. This is the most important file because it can be uploaded again later in the app to resume working on your deviation protocol."),
              br(),
-             p("To begin, select “Template” in the drop-down menu on the upper left."),
+             p("To begin, switch from", em("Instructions"), " to ", em("Template"), "in the drop-down menu on the upper left."),
              br()
       )
     ),
@@ -117,7 +116,7 @@ ui <- fluidPage(
                      class = "icon-paragraph",
                      tags$i(id = "upload_icon", class = "fa-solid fa-circle-question question_icon", style = "cursor: pointer;", 
                             `data-tooltip` = "Each time you export your inputs, an .rds file will also be exported. Upload this .rds file here to continue working on your protocol."),
-                     strong("Import Previous State (.rds file):")
+                     strong("Import previous state (.rds file):")
                    ), 
                    
                    div(class = "export-import-container",
@@ -199,20 +198,17 @@ server <- function(input, output, session) {
       # Update the counter reactive value
       counter(n)
       
-      ########################################## fill textinputs
-      sheets <- excel_sheets(path = path) #contains list of sheet names
-      
+      ########################################## fill items with user input
       # get user data (stored in params)
-      
       # update excel
-      modified_sheets <- update_sheets_with_user_data(path, data) # data[[3]] = params[[3]]
+      modified_sheets <- update_sheets_with_user_data(temp_sheets, data) # data[[3]] = params[[3]]
       #save(modified_sheets, file = "show_modified_sheets3.RData")
       
       # set up list to store items of all sheets
       all_items <- list()
       
       # loop through modified sheets
-      for (m in seq_along(sheets))
+      for (m in seq_along(temp_sheets))
       {
         mylist <- items_sheet(modified_sheets[[m]])
         all_items <- append(all_items, list(mylist))          # list that contains items of one section
@@ -228,7 +224,6 @@ server <- function(input, output, session) {
       output$dev_panel <- renderUI({
         generate_dev_panel(temp_sheets, modified_items)
       })
-      
     }
   })
   
@@ -312,13 +307,6 @@ server <- function(input, output, session) {
   
   ##################### END navigate to next tabPanel 
   #### print report and save params ###########################
-
-  # observeEvent(input$report, { 
-  #    params <- generate_params(input, counter())
-  #    saveRDS(params,  file = "prevstate.rds")
-  # })
-  
-  
   output$report <- downloadHandler(
     filename = function() {
       paste('report', sep = '', switch(
@@ -378,7 +366,8 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       params <- generate_params(input, counter())
-      saveRDS(params$params_s, file = file)
+      saveRDS(params$params_long, file = file)
+      #saveRDS(params$params, file = file)
     }
   )
   ##################### END print report and save params 
