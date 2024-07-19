@@ -86,8 +86,10 @@ check_item_type <- function(tabpanel, i, bool_ex) {
          }, #close none
          matrix2 = {
            m_options <- as.list(unlist(strsplit(as.character(tabpanel$options[i]), " tab ")))
-           item <- radioMatrixInput(inputId = tabpanel$id[i], rowIDs = c("analysis code", "experimental code",  "raw data", "processed data"),
-                                    rowLLabels = as.matrix(data.frame(l = c(":", ":", ":", ":"))),
+           #item <- radioMatrixInput(inputId = tabpanel$id[i], rowIDs = c("analysis code", "experimental code",  "raw data", "processed data"),
+           item <- radioMatrixInput(inputId = tabpanel$id[i], rowIDs = c("1", "2",  "3", "4"),
+                                    rowLLabels = as.matrix(data.frame(object = c("analysis code", "experimental code", "raw data", "processed data"))),
+                                    #rowLLabels = as.matrix(data.frame(l = c(":", ":", ":", ":"))),
                                     choices = m_options)
          }, #close matrix2
          stop("Unknown type found in row ", i) # If type is undefined, stop and print an error message
@@ -106,7 +108,7 @@ check_item_type <- function(tabpanel, i, bool_ex) {
             div(
               class = "icon-paragraph",
               # if you don't want the info icons in your app, simply make the next line a comment
-              #tags$i(id = tabpanel$icon_ids[i], class = "fas fa-info-circle info_icon", style = "cursor: pointer;", `data-tooltip` = tabpanel$resources[i]),
+             # tags$i(id = tabpanel$icon_ids[i], class = "fas fa-info-circle info_icon", style = "cursor: pointer;", `data-tooltip` = tabpanel$resources[i]),
               strong(tabpanel$head[i])
             ),
             #style = "border: 1px solid black; padding-top: 1em;",
@@ -215,30 +217,7 @@ update_sheets_with_user_data <- function(sheets, params){
   names(modified_sheets) <- sheets # set names for the updated sheets to the original names
   return(modified_sheets)
 }
-# modified_sheets <- update_sheets_with_user_data(path, params) # usage
-
-
-# update_sheets_with_user_data <- function(path, params){
-#   sheets <- excel_sheets(path = path) #contains list of sheet names
-#   modified_sheets <- vector("list", length = length(sheets)) # initialize blank vector
-#   for (s in seq_along(sheets)) {
-#     sheet <- read_excel(path, sheets[s])    # read single sheet
-#     
-#     for (i in seq_len(nrow(sheet))) {
-#       id <- sheet$id[i] # id of the item in row i
-#       if (length(params) >= 3 && id %in% names(params[[3]])) {
-#         val <- params[[3]][[id]]
-#       } else {
-#         val <- NULL
-#       }
-#       sheet$example[i] <- ifelse(!is.null(val), val, NA)
-#     }
-#     modified_sheets[[s]] <- sheet # add user data
-#   }
-#   names(modified_sheets) <- sheets # set names for the updated sheets to the original names
-#   return(modified_sheets)
-# }
-# modified_sheets <- update_sheets_with_user_data(path, params) # usage
+# modified_sheets <- update_sheets_with_user_data(temp_sheets, params) # usage
 
 #### generate_prp_panel 
 generate_prp_panel <- function(temp_sheets, temp_items){ 
@@ -450,6 +429,7 @@ generate_params <- function(input, counter) {
   params_long <- list(authors = respauth, orcid = resporc, answers = ans_l, questions = ques_l, metadata = metadata_l)
   
   params <- list(params_s = params_s, params_long = params_long)
+ # saveRDS(params_s, "params_s.rds")
   return(params)
 }
 
@@ -505,7 +485,7 @@ create_statename <- function(){ # first contributor can be found in params[[1]][
   only_date <- format(current_time, "%m-%d-%Y") # add formatting
   
   # create spreadsheetname and code
-  statename <- paste0("protocol-state-on-", date_time) # e.g. "intermediate-state-on-05-16-2024-10:12:40"
+  statename <- date_time #paste0("state-on-", date_time) # e.g. "intermediate-state-on-05-16-2024-10:12:40"
   
   return(statename)
 }
