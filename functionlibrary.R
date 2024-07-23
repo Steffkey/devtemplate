@@ -417,7 +417,7 @@ generate_params <- function(input, counter) {
   ques <- temp_ques_ans$ques[print_items]
   metadata <- temp_ques_ans$meta[print_items]
   
-  ## 3a. long version includes all items
+  ## 3b. long version includes all items
   ID_l <- temp_ques_ans$ID
   ques_l <- temp_ques_ans$ques
   metadata_l <- temp_ques_ans$meta

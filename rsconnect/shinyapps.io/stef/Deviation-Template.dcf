@@ -5,9 +5,9 @@ account: stef
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 12163443
-bundleId: 8883511
+bundleId: 8896574
 url: https://stef.shinyapps.io/Deviation-Template/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: deviation_template_3.xlsx|params_s.RDS|README.md|temp_dev8.RData|temp_dev9.RData|testfiles
+ignoredFiles: deviation_template_4.xlsx|README.md|temp_dev10.RData|testfiles

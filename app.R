@@ -13,8 +13,8 @@ library(rsconnect)
 #### PREPARATIONS #############################################################
 
 rm(list = ls()) # clear environment
-load("temp_dev10.RData") # Load the processed data
-path = "deviation_template_4.xlsx" # set path to template excel
+load("temp_dev11.RData") # Load the processed data
+path = "deviation_template_5.xlsx" # set path to template excel
 source("functionlibrary.R", local = TRUE) # get functions
 #source("C:/Users/mueller_admin.ZPIDNB21/Documents/Desktop/Rprojects/scripts/functionlibrary.R", local = TRUE)
 
