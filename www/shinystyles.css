@@ -16,8 +16,6 @@
 }
 
 .contact{ /* contact email in the upper right corner */
-font-weight: bold;
-color: green;
 margin: auto 1.5em auto 0;
 }
 
@@ -45,6 +43,12 @@ margin: auto 1.5em auto 0;
 .whitebar { /* white bar under the header bar */
 	height:2em; 
 	width: auto;
+}
+
+.whitebar > p {  /* contact */
+	text-align: right;
+	margin: auto 6em auto 0;
+	font-weight: bold;
 }
 
 /* */
